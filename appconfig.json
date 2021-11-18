@@ -1,0 +1,16 @@
+{
+    "pairs": [
+        {
+            "description": "ETH / USD",
+            "contractAddress": "0xFA68e0c0285BD58Cd30C7Afe31330696cA84d97a",
+            "sources": [
+                {
+                    "source_path": "base_experience",
+                    "end_point": "https://pokeapi.co/api/v2/pokemon/ditto"
+                }
+            ],
+            "interval": 5000,
+            "network": "aurora"
+        }
+    ]
+}
