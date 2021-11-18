@@ -22,7 +22,7 @@ async function main() {
         const timers = appConfig.pairs.map((pair, index) => {
             return setInterval(async () => {
                 if (processingIndexes.has(index)) {
-                    logger.debug(`${index} still processing`);
+                    logger.debug(`#${index} still processing`);
                     return;
                 }
 

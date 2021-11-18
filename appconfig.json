@@ -2,7 +2,7 @@
     "pairs": [
         {
             "description": "ETH / USD",
-            "contractAddress": "0xFA68e0c0285BD58Cd30C7Afe31330696cA84d97a",
+            "contractAddress": "0x7477b821E6a3c4d946b49Be9b4520ad7d195EC10",
             "sources": [
                 {
                     "source_path": "base_experience",
