@@ -117,6 +117,7 @@ Information containing where to fetch data. Uses the [jsonpath-rust](https://git
 |---|---|---|
 |source_path|string|Path to the number value. Uses [jsonpath-rust](https://github.com/besok/jsonpath-rust) for finding values.|
 |end_point|string|The URL to a JSON API|
+|multiplier|string / undefined|The result value will be multiplied against this value. Can be useful to normalize decimals. Defaults to not being used.|
 
 Example:
 

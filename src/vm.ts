@@ -56,8 +56,8 @@ export async function resolveSources(pair: PairInfo): Promise<string | null> {
         const args: string[] = [
             '0x0000000000000000000000000000000000000001', // id of the wasm file
             JSON.stringify(pair.sources.map((source) => ({
+                ...source,
                 source_path: convertOldSourcePath(source.source_path),
-                end_point: source.end_point,
             }))),
             'number',
             (10 ** pair.decimals).toString(),
