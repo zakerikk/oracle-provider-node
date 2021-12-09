@@ -1,6 +1,6 @@
 {
   "name": "oracle-provider-node",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Provider node for the flux oracle",
   "main": "index.js",
   "scripts": {
