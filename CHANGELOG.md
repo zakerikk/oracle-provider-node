@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/fluxprotocol/oracle-provider-node/compare/v1.1.0...v1.1.1) (2021-12-14)
+
+
+### Bug Fixes
+
+* **provider:** Fix issue where a nonce could be mis matched ([dc285b0](https://github.com/fluxprotocol/oracle-provider-node/commit/dc285b0ae94b3ad2e52746c42347f5ca25225ba3))
+
 ## 1.1.0 (2021-12-09)
 
 
