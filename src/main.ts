@@ -3,6 +3,7 @@ import { APP_CONFIG_LOCATION, AVAILABLE_PROVIDERS, DEBUG } from "./config";
 import logger from './services/LoggerService';
 import { readFile } from 'fs/promises';
 import AppConfig from "./models/AppConfig";
+import NetworkQueue from './services/NetworkQueue';
 
 async function main() {
     try {
@@ -25,31 +26,24 @@ async function main() {
 
         await Promise.all(providers.map(p => p.init()));
 
-        const processingIndexes: Set<number> = new Set();
+        const queues = providers.map(provider => new NetworkQueue(provider));
+
+        // const processingIndexes: Set<number> = new Set();
         const timers = appConfig.pairs.map((pair, index) => {
             return setInterval(async () => {
-                if (processingIndexes.has(index)) {
-                    logger.debug(`#${index} still processing`);
-                    return;
-                }
+                const queue = queues.find(queue => queue.id === pair.networkId);
+                if (!queue) throw new Error(`Could not find provider ${pair.networkId}`);
 
-                const provider = providers.find(p => p.networkId === pair.networkId);
-                if (!provider) throw new Error(`Could not find provider ${pair.networkId}`);
-
-                processingIndexes.add(index);
-                logger.debug(`Processing #${index} (${pair.pair} - ${pair.contractAddress})`);
-
-                const answer = await provider.resolvePair(pair);
-
-                logger.debug(`Completed processing #${index} with answer ${answer}`);
-                processingIndexes.delete(index);
+                queue.add(pair);
             }, pair.interval);
         });
 
+        queues.forEach(queue => queue.start());
         logger.info('🚀 Booted');
 
         death(() => {
             timers.forEach(t => clearInterval(t));
+            queues.forEach(q => q.stop());
             process.exit(0);
         });
     } catch (error: any) {

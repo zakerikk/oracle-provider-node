@@ -40,3 +40,7 @@ export default interface AppConfig {
     pairs: Pair[];
     networks: Network[];
 }
+
+export function createPairId(pair: Pair) {
+    return `${pair.networkId}-${pair.pair}-${pair.contractAddress}`;
+}
