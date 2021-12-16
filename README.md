@@ -103,7 +103,7 @@ Pairs include information for a specific pair such as which sources to fetch fro
 |---|---|---|
 |description|string | undefined| Optional description tag in other to identify what pair this is.|
 |pair|string|Info about the pair. Should be something like "ETH / USD". This info will also be posted on chain depending on the network.
-|contractAddress|string| Which address to post the answers to.
+|contractAddress|string| Which address to post the answers to. Mainnet can use `fpo-v1.fluxoracle.near`
 |sources|Source[]|An array of sources. More on that below.
 |interval|number|Interval between updates.|
 |networkId|string|The id of the network in your `"networks"` configuration.|
