@@ -3,6 +3,7 @@ import toPath from 'lodash.topath';
 import { readFile } from 'fs/promises'
 import PairInfo from './models/PairInfo';
 import { execute, InMemoryCache } from '@fluxprotocol/oracle-vm';
+import { createPairId } from './models/AppConfig';
 
 export function convertOldSourcePath(sourcePath: string): string {
     // Keep support for more functions
@@ -90,6 +91,8 @@ export async function resolveSources(pair: PairInfo): Promise<string | null> {
             logger.error(`[vm] Invalid request ${executeResult.code} ${executeResult.logs}`);
             return null;
         }
+
+        logger.debug(`[vm] ${createPairId(pair)}: \n${executeResult.logs.join('\n')}`);
 
         return logResult.value;
     } catch (error: any) {
