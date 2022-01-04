@@ -74,7 +74,7 @@ There's multiple ways to go about this. The simplest method would be to create, 
 #### contract addresses
 |Network|Contract address|
 |---|---|
-|testnet|franklinwaller2.testnet|
+|testnet|fpo1.franklinwaller2.testnet|
 |mainnet|fpo-v1.fluxoracle.near|
 
 
