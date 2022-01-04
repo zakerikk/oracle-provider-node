@@ -29,6 +29,7 @@ export async function getDecimalsForPair(pair: Pair, account: Account): Promise<
         // Provider does not exist at all. We need to create the pair.
         const defaultDecimals = pair.defaultDecimals ?? DEFAULT_DECIMALS;
         logger.info(`[${pair.contractAddress}] No pair found for ${pair.pair}, creating one with ${defaultDecimals} decimals`);
+
         return {
             decimals: defaultDecimals,
             pairExists: false,

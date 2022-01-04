@@ -1,7 +1,7 @@
 import logger from './services/LoggerService';
 import toPath from 'lodash.topath';
 import { readFile } from 'fs/promises'
-import PairInfo from './models/PairInfo';
+import PairInfo, { convertPairInfoToString } from './models/PairInfo';
 import { execute, InMemoryCache } from '@fluxprotocol/oracle-vm';
 import { createPairId } from './models/AppConfig';
 
@@ -74,8 +74,15 @@ export async function resolveSources(pair: PairInfo): Promise<string | null> {
         }, vmCache);
 
         if (executeResult.code !== 0) {
-            logger.error(`[vm] Exited with code ${executeResult.code} ${executeResult.logs}`);
-            return null;
+            if (executeResult.code === 3) {
+                logger.warn(`[vm] One or more sources could not be resolved for ${createPairId(pair)}`, {
+                    logs: executeResult.logs,
+                    pair: convertPairInfoToString(pair),
+                });
+            } else {
+                logger.error(`[vm] Exited with code ${executeResult.code} ${executeResult.logs} ${convertPairInfoToString(pair)}`);
+                return null;
+            }
         }
 
         const lastLog = executeResult.logs.pop();

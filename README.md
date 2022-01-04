@@ -17,6 +17,8 @@ cp .env.example .env # add private key
 nano appconfig.json # populate with contract address, API sources, network, and interval
 ```
 
+To improve the project and receive better support please consider setting the `DISABLE_ANALYTICS` to `false`. No private keys will be submitted. 
+
 In `appconfig.json`, each price pair is mapped to a single contract and can have any number of sources. The node will push the result of the last source that returns an answer, throwing out sources that do not respond.
 
 ### Running
@@ -44,7 +46,7 @@ Configuration for a specific network. Currently two types are supported. `evm` a
 |---|---|---|
 |type|"evm"|Lets the node know this is an EVM type chain|
 |networkId|string|A custom ID that you fill in. This will be used to connect pairs to a specific network configuration. Can be anything you want to identify the configuration|
-|privateKeyEnvKey|string|The name of the env variable where the private key is stored.|
+|privateKeyEnvKey|string|The name of the env variable where the private key is stored. (can be set in the `.env` file)|
 |chainId|number|The chain id of the EVM chain. (1 = Ethereum)|
 |rpc|string|The URL to the Ethereum compatible RPC|
 
@@ -71,7 +73,7 @@ Example:
 |type|"near"|Lets the node know this is an EVM type chain|
 |networkId|string|A custom ID that you fill in. This will be used to connect pairs to a specific network configuration. Can be anything you want to identify the configuration|
 |credentialsStorePathEnvKey|string|The name of the env variable where the credentials are stored. Not required if you are using `privateKeyEnvKey`|
-|privateKeyEnvKey|string|The name of the env variable where the private key is stored. Not required if you are using `credentialsStorePathEnvKey`|
+|privateKeyEnvKey|string|The name of the env variable where the private key is stored (can be set in the `.env` file). Not required if you are using `credentialsStorePathEnvKey`|
 |networkType|string|Whether this network is "testnet" or "mainnet"|
 |rpc|string|The URL to the Ethereum compatible RPC|
 |accountId|string|The accountId coupled with the privateKey/credentials|
@@ -107,7 +109,7 @@ Pairs include information for a specific pair such as which sources to fetch fro
 |sources|Source[]|An array of sources. More on that below.
 |interval|number|Interval between updates.|
 |networkId|string|The id of the network in your `"networks"` configuration.|
-|defaultDecimals|number|If there are no decimals configured, the node will use and submit a number containing this many decimals.|
+|defaultDecimals|number|If there are no decimals configured, the node will use and submit a number containing this many decimals. Defaults to `6`|
 
 ### Source
 
