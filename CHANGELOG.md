@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/fluxprotocol/oracle-provider-node/compare/v1.2.0...v1.3.0) (2022-01-04)
+
+
+### Features
+
+* **logger:** Add support for analytics to sentry ([2bd8f75](https://github.com/fluxprotocol/oracle-provider-node/commit/2bd8f75962aaaa3b9a70982e1c53cbb3efc79174))
+
+## [1.2.0](https://github.com/fluxprotocol/oracle-provider-node/compare/v1.1.1...v1.2.0) (2022-01-03)
+
+
+### Features
+
+* **wasm:** Add support for changing http parameters ([02c5808](https://github.com/fluxprotocol/oracle-provider-node/commit/02c58083efe13f76069e981ffd4a455bf9aeaecf))
+
+
+### Bug Fixes
+
+* **fetch:** Fix issue where a non existent source path would cause no outcome to be set ([1c2e79e](https://github.com/fluxprotocol/oracle-provider-node/commit/1c2e79e4a709261154614596efeaf984d336029e))
+
 ### [1.1.1](https://github.com/fluxprotocol/oracle-provider-node/compare/v1.1.0...v1.1.1) (2021-12-14)
 
 

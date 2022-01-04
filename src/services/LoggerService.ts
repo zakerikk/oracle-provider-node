@@ -1,6 +1,7 @@
 import winston, { format } from 'winston';
 
-import { MAX_LOG_LIFETIME } from '../config';
+import { DISABLE_ANALYTICS, MAX_LOG_LIFETIME, SENTRY_DSN } from '../config';
+import Sentry from 'winston-transport-sentry-node';
 import 'winston-daily-rotate-file';
 
 const logFormat = format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`);
@@ -29,5 +30,14 @@ const logger = winston.createLogger({
         }),
     ],
 });
+
+if (!DISABLE_ANALYTICS) {
+    logger.add(new Sentry({
+        sentry: {
+            dsn: SENTRY_DSN,
+        },
+        level: 'warn',
+    }));
+}
 
 export default logger;
