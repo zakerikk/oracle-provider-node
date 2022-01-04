@@ -5,7 +5,7 @@ Provider node for pushing and settling data requests for first-party price feeds
 
 ### Pre-requisites
 
-First, deploy a `FluxPriceFeed.sol` contract by [cloning the `price-feeds-evm` repository and following the README](https://github.com/fluxprotocol/price-feeds-evm), saving your contract address to use here. Alternatively, leave the default `appconfig.json` contract address to test your API sources without deploying a new contract, using a contract we deployed to Aurora with access control removed.
+First, deploy a `FluxPriceFeed.sol` contract by [cloning the `price-feeds-evm` repository and following the README](https://github.com/fluxprotocol/price-feeds-evm), saving your contract address to use here. Alternatively, leave the default `appconfig.json` contract address to test your API sources without deploying a new contract, using a contract we deployed to Aurora with access control removed. Also to support the NEAR network, the `near-cli` package needs to be installed.
 
 ### Set-up
 
@@ -65,6 +65,18 @@ Example:
 ```
 
 ### near
+
+#### accessing / generating NEAR private keys
+There's multiple ways to go about this. The simplest method would be to create, or sign in to, a NEAR account using the [near web wallet](https://wallet.near.org). And then calling `NEAR_ENV={NETWORK}near login` and following the steps provided by the CLI. This will generate a access keys in `~/.near-credentials/{NETWORK}/{MY_ACCOUNT}.near.json` which can then be copied into any environment.
+
+#### contract addresses
+|Network|Contract address|
+|---|---|
+|testnet|franklinwaller2.testnet|
+|mainnet|fpo-v1.fluxoracle.near|
+
+
+#### configuration
 
 |Key|Type|Description|
 |---|---|---|
