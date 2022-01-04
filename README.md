@@ -69,12 +69,12 @@ Example:
 ### near
 
 #### accessing / generating NEAR private keys
-There's multiple ways to go about this. The simplest method would be to create, or sign in to, a NEAR account using the [near web wallet](https://wallet.near.org). And then calling `NEAR_ENV={NETWORK}near login` and following the steps provided by the CLI. This will generate a access keys in `~/.near-credentials/{NETWORK}/{MY_ACCOUNT}.near.json` which can then be copied into any environment.
+There's multiple ways to go about this. The simplest method would be to create, or sign in to, a NEAR account using the [near web wallet](https://wallet.near.org). And then calling `NEAR_ENV={NETWORK} near login` and following the steps provided by the CLI. This will generate a access keys in `~/.near-credentials/{NETWORK}/{MY_ACCOUNT}.near.json` which can then be copied into any environment.
 
 #### contract addresses
 |Network|Contract address|
 |---|---|
-|testnet|fpo1.franklinwaller2.testnet|
+|testnet|fpo2.franklinwaller2.testnet|
 |mainnet|fpo-v1.fluxoracle.near|
 
 

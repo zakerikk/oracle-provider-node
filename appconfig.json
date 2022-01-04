@@ -35,7 +35,7 @@
         {
             "description": "ETH / USD for NEAR",
             "pair": "ETH / USD",
-            "contractAddress": "fpo1.franklinwaller2.testnet",
+            "contractAddress": "fpo2.franklinwaller2.testnet",
             "sources": [
                 {
                     "source_path": "market_data.current_price.usd",
