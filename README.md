@@ -5,9 +5,17 @@ Provider node for pushing and settling data requests for first-party price feeds
 
 ### Pre-requisites
 
-First, deploy a `FluxPriceFeed.sol` contract by [cloning the `price-feeds-evm` repository and following the README](https://github.com/fluxprotocol/price-feeds-evm), saving your contract address to use here. Alternatively, leave the default `appconfig.json` contract address to test your API sources without deploying a new contract, using a contract we deployed to Aurora with access control removed. Also to support the NEAR network, the `near-cli` package needs to be installed.
+You must have node.js installed. We are using `v14.18.1`.
 
-### Set-up
+## For providing data on an EVM chain
+First, deploy a `FluxPriceFeed.sol` contract by [cloning the `price-feeds-evm` repository and following the README](https://github.com/fluxprotocol/price-feeds-evm), saving your contract address to use here. Alternatively, leave the default `appconfig.json` contract address to test your API sources without deploying a new contract, using a contract we deployed to Aurora with access control removed. 
+You must deploy a new contract for each pair you provide on an EVM chain.
+
+## For providing data on NEAR
+
+To support the NEAR network, the `near-cli` package needs to be installed. (`npm i -g near-cli`)
+
+### General Set-up
 
 ```bash
 git clone https://github.com/fluxprotocol/oracle-provider-node
@@ -20,6 +28,24 @@ nano appconfig.json # populate with contract address, API sources, network, and 
 To improve the project and receive better support please consider setting the `DISABLE_ANALYTICS` to `false`. No private keys will be submitted. 
 
 In `appconfig.json`, each price pair is mapped to a single contract and can have any number of sources. The node will push the result of the last source that returns an answer, throwing out sources that do not respond.
+
+## NEAR Setup
+
+First login using the near-cli by doing `NEAR_ENV=testnet near login` (`NEAR_ENV=mainnet` for mainnet). This will store private keys inside the `~/.near-credentials/testnet` (or `/mainnet` for mainnet). If for some reason the data is not in those folders please manually copy the private key over from `~/.near-credentials/default` over to the desired network folder.
+
+
+In the `appconfig.json` Make sure if you are using NEAR to change the accountId (containing `{{YOUR_ACCOUNT_ID}}`) with your accountId that you just used to login with. Also if you want to deploy for mainnet make sure the `networkType` is set to mainnet and `rpc` is set to `https://rpc.testnet.near.org`.
+
+In the `.env` file you just created change the `NEAR_CREDENTIALS_STORE_PATH` to the root of the `near-credentials` folder. (For example `/home/myname/.near-credentials/`).
+
+Near does not require a new contract deployment for each pair. Each pair is generated automaticly when you push a new pair. See [Contract addresses for NEAR](#contract-addresses)
+
+# EVM Setup
+
+Change in the `appconfig.json` the `chainId` and `rpc` to the desired EVM chain. Currently it's configured to use the Aurora EVM chain. 
+
+Change in the `.env` the `AURORA_PRIVATE_KEY` to your private key (Not a mnemonic but the key that starts with 0x)
+
 
 ### Running
 
@@ -74,7 +100,7 @@ There's multiple ways to go about this. The simplest method would be to create, 
 #### contract addresses
 |Network|Contract address|
 |---|---|
-|testnet|fpo2.franklinwaller2.testnet|
+|testnet|fpo3.franklinwaller2.testnet|
 |mainnet|fpo-v1.fluxoracle.near|
 
 
@@ -141,7 +167,7 @@ Example:
         {
             "description": "ETH / USD for NEAR",
             "pair": "ETH / USD",
-            "contractAddress": "fpo1.franklinwaller2.testnet",
+            "contractAddress": "fpo3.franklinwaller2.testnet",
             "sources": [
                 {
                     "source_path": "market_data.current_price.usd",
