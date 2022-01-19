@@ -66,7 +66,7 @@ export async function pushDataOnPair(pair: PairInfo, price: string, pairExists: 
                 price,
             },
             gas: new BN(nearConfig.maxGas ?? DEFAULT_MAX_GAS),
-            attachedDeposit: new BN(nearConfig.storageDeposit ?? DEFAULT_STORAGE_DEPOSIT),
+            attachedDeposit: new BN('0'),
         });
 
         if (isTransactionFailure(transactionOutcome)) {
