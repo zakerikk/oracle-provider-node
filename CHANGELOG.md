@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/fluxprotocol/oracle-provider-node/compare/v1.3.0...v1.4.0) (2022-01-20)
+
+
+### Features
+
+* **queue:** Add support for batches ([7733e73](https://github.com/fluxprotocol/oracle-provider-node/commit/7733e73b0c2b10a06d9e2d82e317d6d9410325af))
+
 ## [1.3.0](https://github.com/fluxprotocol/oracle-provider-node/compare/v1.2.0...v1.3.0) (2022-01-04)
 
 
