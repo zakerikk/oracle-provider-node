@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/fluxprotocol/oracle-provider-node/compare/v1.4.0...v1.5.0) (2022-01-20)
+
+
+### Features
+
+* **boot:** Submit all the pair answers on boot ([e389d1b](https://github.com/fluxprotocol/oracle-provider-node/commit/e389d1bcbbc8f849085337e1083c784c1a17c760))
+
 ## [1.4.0](https://github.com/fluxprotocol/oracle-provider-node/compare/v1.3.0...v1.4.0) (2022-01-20)
 
 
