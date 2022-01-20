@@ -2,7 +2,7 @@ import death from 'death';
 import { APP_CONFIG_LOCATION, AVAILABLE_PROVIDERS, DEBUG } from "./config";
 import logger from './services/LoggerService';
 import { readFile } from 'fs/promises';
-import AppConfig, { Batch } from "./models/AppConfig";
+import AppConfig, { Batch, createPairId } from "./models/AppConfig";
 import NetworkQueue from './services/NetworkQueue';
 
 async function main() {
@@ -45,6 +45,22 @@ async function main() {
                 contractAddress: pair.contractAddress,
             });
         });
+
+        logger.info('Submitting latest info for each pair..');
+        // Resolve all pairs in order to make sure we are updated to the latest prices
+        for await (const batch of batches) {
+            const queue = queues.find(queue => queue.id === batch.networkId);
+            if (!queue) {
+                throw new Error(`Could not find provider for ${batch.networkId}`);
+            }
+
+            const id = createPairId(batch);
+            logger.debug(`[${queue.id}] Processing ${id}`);
+            const answer = await queue.provider.resolveBatch(batch);
+            logger.debug(`[${queue.id}] Completed processing "${id}" with answer ${answer}`);
+        }
+
+        logger.info('Done. Pairs will now be on a interval');
 
         const timers = batches.map((batch) => {
             const queue = queues.find(queue => queue.id === batch.networkId);
