@@ -1,11 +1,10 @@
 import { Account } from "near-api-js";
-import { Batch, createPairId, NearNetwork, Network, Pair } from "../../models/AppConfig";
+import { Batch, createPairId, NearNetwork, Network } from "../../models/AppConfig";
 import IProvider from "../IProvider";
 import logger from '../../services/LoggerService';
 import { connectToNear, getAccount, isTransactionFailure, validateNearConfig } from "./NearConnectService";
 import { resolveSources } from "../../vm";
-import { BN } from "bn.js";
-import { createNearActionForPair, createPair, getDecimalsForPair, pushDataOnPair } from "./NearPairService";
+import { createNearActionForPair, createPair, getDecimalsForPair } from "./NearPairService";
 import { Action } from "near-api-js/lib/transaction";
 
 export default class NearProvider extends IProvider {

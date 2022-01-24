@@ -4,6 +4,7 @@ import logger from './services/LoggerService';
 import { readFile } from 'fs/promises';
 import AppConfig, { Batch, createPairId } from "./models/AppConfig";
 import NetworkQueue from './services/NetworkQueue';
+import { searchRequests } from './searcher';
 
 async function main() {
     try {
@@ -89,6 +90,11 @@ async function main() {
         });
 
         queues.forEach(queue => queue.start());
+
+        logger.info('Creating listeners');
+
+        searchRequests(appConfig, queues);
+
         logger.info('🚀 Booted');
 
         death(() => {

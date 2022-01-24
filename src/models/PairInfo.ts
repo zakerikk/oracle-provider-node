@@ -1,6 +1,6 @@
-import { Pair } from "./AppConfig";
+import { Request } from "./AppConfig";
 
-export default interface PairInfo extends Pair {
+export default interface PairInfo extends Request {
     decimals: number;
 }
 

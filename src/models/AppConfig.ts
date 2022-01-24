@@ -1,10 +1,13 @@
-export interface SourceInfo {
-    source_path: string;
-    end_point: string;
-    multiplier: string;
+import { SourceInfo } from "./SourceInfo";
+
+export interface OracleRequest {
+    toNetwork: string;
+    toContractAddress: string;
+    args: string[];
+    type: "request"
 }
 
-export interface Pair {
+export interface PushRequest {
     description: string;
     pair: string;
     contractAddress: string;
@@ -12,10 +15,13 @@ export interface Pair {
     interval: number;
     networkId: string;
     defaultDecimals?: number;
+    type: "push";
 }
 
+export type Request = PushRequest;
+
 export interface Batch {
-    pairs: Pair[];
+    pairs: Request[];
     contractAddress: string;
     description: string;
     interval: number;
@@ -44,19 +50,38 @@ export interface NearNetwork {
 
 export type Network = EvmNetwork | NearNetwork;
 
-export default interface AppConfig {
-    pairs?: Pair[];
-    batches?: Batch[];
-    networks?: Network[];
+export interface RequestListenerConfig {
+    contractAddress: string;
+    networkId: string;
+    interval: number;
 }
 
-export function isBatch(pair: Pair | Batch): pair is Batch {
+export default interface AppConfig {
+    pairs?: Request[];
+    batches?: Batch[];
+    networks?: Network[];
+    requestListeners?: RequestListenerConfig[];
+}
+
+export function isOracleRequest(item: Request | Batch | OracleRequest): item is OracleRequest {
+    if (isBatch(item)) {
+        return false;
+    }
+
+    return item.type === 'request';
+}
+
+export function isBatch(pair: Request | Batch | OracleRequest): pair is Batch {
     return pair.hasOwnProperty('pairs');
 }
 
-export function createPairId(pair: Pair | Batch) {
+export function createPairId(pair: Request | Batch | OracleRequest) {
     if (isBatch(pair)) {
         return `${pair.networkId}-${pair.description}-${pair.pairs[0].pair}-${pair.interval}`;
+    }
+
+    if (isOracleRequest(pair)) {
+        return ``;
     }
 
     return `${pair.networkId}-${pair.pair}-${pair.contractAddress}`;

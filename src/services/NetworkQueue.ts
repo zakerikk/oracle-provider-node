@@ -1,10 +1,10 @@
-import { Batch, createPairId, isBatch, Pair } from "../models/AppConfig";
+import { Batch, createPairId, isOracleRequest, OracleRequest } from "../models/AppConfig";
 import IProvider from "../providers/IProvider";
 import logger from './LoggerService';
 
 
 export default class NetworkQueue {
-    queue: Batch[] = [];
+    queue: (Batch | OracleRequest)[] = [];
     processingIds: Set<string> = new Set();
     intervalId?: NodeJS.Timer;
     public id: string;
@@ -13,19 +13,19 @@ export default class NetworkQueue {
         this.id = provider.networkId;
     }
 
-    has(batch: Batch): boolean {
-        const id = createPairId(batch);
-        const inQueue = this.queue.some(item => createPairId(item) === id);
+    has(item: Batch | OracleRequest): boolean {
+        const id = createPairId(item);
+        const inQueue = this.queue.some(x => createPairId(x) === id);
 
         if (inQueue) return true;
 
         return this.processingIds.has(id);
     }
 
-    add(batch: Batch) {
-        if (this.has(batch)) return;
-        this.queue.push(batch);
-        logger.debug(`[${this.id}] Added "${createPairId(batch)}" to queue`);
+    add(item: Batch | OracleRequest) {
+        if (this.has(item)) return;
+        this.queue.push(item);
+        logger.debug(`[${this.id}] Added "${createPairId(item)}" to queue`);
     }
 
     start() {
@@ -43,7 +43,13 @@ export default class NetworkQueue {
 
             logger.debug(`[${this.id}] Processing ${id}`);
 
-            const answer = await this.provider.resolveBatch(pair);
+            let answer: string | null = null;
+
+            if (isOracleRequest(pair)) {
+                answer = await this.provider.resolveRequest(pair);
+            } else {
+                answer = await this.provider.resolveBatch(pair);
+            }
 
             logger.debug(`[${this.id}] Completed processing "${id}" with answer ${answer}`);
             this.processingIds.delete(id);

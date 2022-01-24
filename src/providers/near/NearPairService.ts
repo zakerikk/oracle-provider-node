@@ -2,7 +2,7 @@ import { BN } from "bn.js";
 import { Account, transactions } from "near-api-js";
 import { Action } from "near-api-js/lib/transaction";
 import { DEFAULT_DECIMALS } from "../../config";
-import { NearNetwork, Pair } from "../../models/AppConfig";
+import { NearNetwork, Request } from "../../models/AppConfig";
 import PairInfo from "../../models/PairInfo";
 import cache from "../../services/CacheUtils";
 import logger from '../../services/LoggerService';
@@ -26,7 +26,7 @@ export interface TransactionOption {
     transactionOptions: TransactionCallOptions[];
 }
 
-export async function getDecimalsForPair(pair: Pair, account: Account): Promise<{ pairExists: boolean, decimals: number }> {
+export async function getDecimalsForPair(pair: Request, account: Account): Promise<{ pairExists: boolean, decimals: number }> {
     try {
         const info = await cache(`${pair.contractAddress}-${pair.pair}`, async () => {
             const priceEntry = await account.viewFunction(pair.contractAddress, 'get_entry', {

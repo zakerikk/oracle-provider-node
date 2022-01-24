@@ -1,11 +1,12 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { Wallet } from "@ethersproject/wallet";
-import { Batch, Network, Pair } from "../../models/AppConfig";
+import { Batch, Network, OracleRequest, Request } from "../../models/AppConfig";
 import IProvider from "../IProvider";
 import { EvmConfig, parseEvmConfig, validateEvmConfig } from "./EvmConfig";
 import { EvmPairInfo, createPriceFeedContract } from "./EvmContract";
 import logger from '../../services/LoggerService';
 import { resolveSources } from '../../vm';
+import { getLatestBlock } from "./EvmRpcService";
 
 
 class EvmProvider extends IProvider {
@@ -24,9 +25,15 @@ class EvmProvider extends IProvider {
         logger.info(`[${networkConfig.networkId}] Using address: ${this.wallet.address}`);
     }
 
-    async init() {}
+    async init() {
+        await getLatestBlock(this.config);
+    }
 
-    async resolvePair(pair: Pair): Promise<string | null> {
+    async fetchRequests(oracleContract: string): Promise<OracleRequest[]> {
+        return [];
+    }
+
+    async resolvePair(pair: Request): Promise<string | null> {
         try {
             let pairInfo = this.pairInfo.get(pair.contractAddress);
 
@@ -48,7 +55,13 @@ class EvmProvider extends IProvider {
     }
 
     async resolveBatch(batch: Batch): Promise<string | null> {
-        return this.resolvePair(batch.pairs[0]);
+        let result: (string|null)[] = [];
+
+        for await (const pair of batch.pairs) {
+            result.push(await this.resolvePair(pair));
+        }
+
+        return result.join(',');
     }
 }
 
