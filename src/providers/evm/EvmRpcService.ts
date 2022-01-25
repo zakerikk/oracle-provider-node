@@ -1,5 +1,6 @@
-import Big from "big.js";
 import { JsonRpcProvider } from "@ethersproject/providers";
+import { Block } from "../../models/Block";
+import logger from "../../services/LoggerService";
 import { EvmConfig } from "./EvmConfig";
 
 export interface EvmBlock {
@@ -8,21 +9,36 @@ export interface EvmBlock {
     hash: string;
 }
 
-export async function getLatestBlock(config: EvmConfig): Promise<EvmBlock | null> {
+export async function getBlockByNumber(number: number, config: EvmConfig): Promise<Block | null> {
     try {
         const provider = new JsonRpcProvider(config.rpc);
-        const currentBlock = await provider.getBlockNumber();
         const block = await provider.perform('getBlock', {
-            blockTag: currentBlock,
+            blockTag: number,
         });
 
         return {
-            blockNumber: currentBlock,
+            number,
             hash: block.hash,
-            receiptRoot: block.receiptsRoot,
+            receiptsRoot: block.receiptsRoot,
+            network: {
+                chainId: config.chainId,
+                type: 'evm',
+            },
         };
     } catch (error) {
-        console.error('[getLatestBlock]', error);
+        logger.error('[getBlockByNumber]', error);
+        return null;
+    }
+}
+
+export async function getLatestBlock(config: EvmConfig): Promise<Block | null> {
+    try {
+        const provider = new JsonRpcProvider(config.rpc);
+        const currentBlock = await provider.getBlockNumber();
+
+        return getBlockByNumber(currentBlock, config);
+    } catch (error) {
+        logger.error('[getLatestBlock]', error);
         return null;
     }
 }

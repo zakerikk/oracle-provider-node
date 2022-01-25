@@ -1,8 +1,16 @@
+import { Block } from "./Block";
 import { SourceInfo } from "./SourceInfo";
 
 export interface OracleRequest {
-    toNetwork: string;
+    toNetwork: {
+        chainId: number;
+        type: "evm" | "near";
+    };
     toContractAddress: string;
+    confirmationsRequired: number;
+    confirmations: number;
+    /** The block the request is from */
+    block: Block;
     args: string[];
     type: "request"
 }
@@ -34,6 +42,7 @@ export interface EvmNetwork {
     privateKeyEnvKey?: string;
     chainId?: number;
     rpc?: string;
+    blockPollingInterval?: number;
 }
 
 export interface NearNetwork {
@@ -43,6 +52,7 @@ export interface NearNetwork {
     privateKeyEnvKey?: string;
     networkType?: string;
     rpc?: string;
+    chainId?: number;
     accountId?: string;
     maxGas?: string;
     storageDeposit?: string;
@@ -81,7 +91,7 @@ export function createPairId(pair: Request | Batch | OracleRequest) {
     }
 
     if (isOracleRequest(pair)) {
-        return ``;
+        return `${pair.toContractAddress}-${pair.block.number}-${pair.confirmationsRequired}-${pair.toNetwork.chainId}-${pair.block.network.chainId}`;
     }
 
     return `${pair.networkId}-${pair.pair}-${pair.contractAddress}`;

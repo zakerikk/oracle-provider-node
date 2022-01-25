@@ -6,6 +6,7 @@ export interface EvmConfig {
     privateKey: string;
     rpc: string;
     chainId: number;
+    blockPollingInterval: number;
 }
 
 export function validateEvmConfig(networkConfig: Network, env: NodeJS.ProcessEnv = {}) {
@@ -33,7 +34,8 @@ export function parseEvmConfig(networkConfig: Network, env: NodeJS.ProcessEnv = 
 
     return {
         privateKey: env[networkConfig.privateKeyEnvKey ?? ''] ?? '',
-        chainId: Number(networkConfig.chainId) ?? 0,
+        chainId: Number(networkConfig.chainId ?? 0),
         rpc: networkConfig.rpc ?? '',
+        blockPollingInterval: networkConfig.blockPollingInterval ?? 5_000,
     };
 }

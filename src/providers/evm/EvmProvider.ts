@@ -3,18 +3,25 @@ import { Wallet } from "@ethersproject/wallet";
 import { Batch, Network, OracleRequest, Request } from "../../models/AppConfig";
 import IProvider from "../IProvider";
 import { EvmConfig, parseEvmConfig, validateEvmConfig } from "./EvmConfig";
-import { EvmPairInfo, createPriceFeedContract } from "./EvmContract";
+import { EvmPairInfo, createPriceFeedContract, fetchOracleRequests } from "./EvmContract";
 import logger from '../../services/LoggerService';
 import { resolveSources } from '../../vm';
-import { getLatestBlock } from "./EvmRpcService";
+import { EvmBlock, getLatestBlock } from "./EvmRpcService";
+import { debouncedInterval } from "../../services/TimerUtils";
+import NetworkQueue from "../../services/NetworkQueue";
+import { Block } from "../../models/Block";
+import RequestConfirmationsDelayer from "../../services/RequestConfirmationsDelayer";
 
 
 class EvmProvider extends IProvider {
     static type = 'evm';
 
+    currentBlock: Block | null = null;
     wallet: Wallet;
     config: EvmConfig;
     pairInfo: Map<string, EvmPairInfo> = new Map();
+    queues: NetworkQueue[] = [];
+    delayer: RequestConfirmationsDelayer = new RequestConfirmationsDelayer();
 
     constructor(networkConfig: Network) {
         super(networkConfig);
@@ -25,12 +32,29 @@ class EvmProvider extends IProvider {
         logger.info(`[${networkConfig.networkId}] Using address: ${this.wallet.address}`);
     }
 
-    async init() {
-        await getLatestBlock(this.config);
+    async init(queues: NetworkQueue[]) {
+        this.queues = queues;
+        // Used for checking how many confirmations a certain request has
+        debouncedInterval(async () => {
+            this.currentBlock = await getLatestBlock(this.config);
+
+            logger.debug(`[${this.networkConfig.type}-${this.networkConfig.chainId}] Fetched block #${this.currentBlock?.number}`);
+
+            if (this.currentBlock) {
+                this.delayer.setBlock(this.currentBlock);
+            }
+        }, this.config.blockPollingInterval);
     }
 
-    async fetchRequests(oracleContract: string): Promise<OracleRequest[]> {
-        return [];
+    onRequests(callback: (requests: OracleRequest) => any): void {
+        this.delayer.onRequestReady(callback);
+    }
+
+    async startFetching(oracleContract: string, interval: number): Promise<void> {
+        debouncedInterval(async () => {
+            const requests = await fetchOracleRequests(oracleContract, this.config, this.wallet);
+            requests.forEach(r => this.delayer.addRequest(r));
+        }, interval);
     }
 
     async resolvePair(pair: Request): Promise<string | null> {
@@ -52,6 +76,10 @@ class EvmProvider extends IProvider {
             logger.error(`[${pair.networkId}] Could not resolve ${pair.pair} - ${error.toString()}`);
             return null;
         }
+    }
+
+    async resolveRequest(request: OracleRequest): Promise<string | null> {
+        return null;
     }
 
     async resolveBatch(batch: Batch): Promise<string | null> {

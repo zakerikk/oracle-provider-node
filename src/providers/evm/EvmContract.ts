@@ -1,8 +1,10 @@
 import { Contract } from '@ethersproject/contracts';
 import { Wallet } from '@ethersproject/wallet';
-import { createPairId, Request } from '../../models/AppConfig';
+import { createPairId, OracleRequest, Request } from '../../models/AppConfig';
 import PairInfo from '../../models/PairInfo';
 import logger from '../../services/LoggerService';
+import { EvmConfig } from './EvmConfig';
+import { getLatestBlock } from './EvmRpcService';
 import fluxAbi from './FluxPriceFeed.json';
 
 export interface EvmPairInfo extends PairInfo {
@@ -22,3 +24,33 @@ export async function createPriceFeedContract(pair: Request, wallet: Wallet): Pr
     };
 }
 
+export async function fetchOracleRequests(address: string, evmConfig: EvmConfig, wallet: Wallet): Promise<OracleRequest[]> {
+    try {
+        // Do some fetching
+
+        // TODO: This should ofcourse be the block from the request itself.
+        const block = await getLatestBlock(evmConfig);
+
+        if (!block) {
+            throw new Error('Could not find block');
+        }
+
+        return [
+            {
+                confirmationsRequired: 10,
+                confirmations: 0,
+                args: [],
+                toNetwork: {
+                    chainId: 1313161554,
+                    type: 'evm',
+                },
+                block,
+                toContractAddress: '0x00000',
+                type: 'request',
+            }
+        ];
+    } catch (error) {
+        logger.error(`[fetchOracleRequests] ${address} ${error}`);
+        return [];
+    }
+}

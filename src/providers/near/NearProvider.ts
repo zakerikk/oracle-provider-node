@@ -6,11 +6,13 @@ import { connectToNear, getAccount, isTransactionFailure, validateNearConfig } f
 import { resolveSources } from "../../vm";
 import { createNearActionForPair, createPair, getDecimalsForPair } from "./NearPairService";
 import { Action } from "near-api-js/lib/transaction";
+import NetworkQueue from "../../services/NetworkQueue";
 
 export default class NearProvider extends IProvider {
     static type = 'near';
     account?: Account;
     nearConfig: NearNetwork;
+    queues: NetworkQueue[] = [];
 
     constructor(networkConfig: Network) {
         super(networkConfig);
@@ -20,11 +22,12 @@ export default class NearProvider extends IProvider {
         this.nearConfig = networkConfig as NearNetwork;
     }
 
-    async init() {
+    async init(queues: NetworkQueue[]) {
         if (this.networkConfig.type !== 'near') {
             throw new Error('Type should be near');
         }
 
+        this.queues = queues;
         const near = await connectToNear(this.networkConfig);
         this.account = await getAccount(near, this.networkConfig.accountId ?? '');
     }

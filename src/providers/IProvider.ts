@@ -1,4 +1,5 @@
 import { Batch, Network, OracleRequest, Request } from "../models/AppConfig";
+import NetworkQueue from "../services/NetworkQueue";
 export default class IProvider {
     static type = "iprovider";
     networkId: string;
@@ -7,8 +8,9 @@ export default class IProvider {
         this.networkId = networkConfig.networkId ?? 'iprovider';
     }
 
-    init(): Promise<void> { return Promise.resolve() };
-    fetchRequests(oracleContract: string): Promise<OracleRequest[]> { throw new Error('Not implemented') }
+    init(queues: NetworkQueue[]): Promise<void> { return Promise.resolve() };
+    onRequests(callback: (request: OracleRequest) => any) { throw new Error('Not Implemented') }
+    startFetching(oracleContract: string, interval: number): Promise<void> { throw new Error('Not implemented') }
     resolveRequest(request: OracleRequest): Promise<string | null> { throw new Error('Not implemented') }
 
     resolvePair(pair: Request): Promise<string | null> { throw new Error('Not implemented'); }

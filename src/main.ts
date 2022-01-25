@@ -31,9 +31,9 @@ async function main() {
             return new provider(network);
         });
 
-        await Promise.all(providers.map(p => p.init()));
-
         const queues = providers.map(provider => new NetworkQueue(provider));
+        await Promise.all(providers.map(p => p.init(queues)));
+
         const batches: Batch[] = appConfig.batches ?? [];
 
         // Convert everything to batches to make the project less error-prone
