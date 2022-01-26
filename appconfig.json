@@ -2,27 +2,17 @@
     "networks": [
         {
             "type": "evm",
-            "networkId": "aurora",
+            "networkId": "aurora-testnet",
             "privateKeyEnvKey": "AURORA_PRIVATE_KEY",
-            "chainId": 1313161554,
-            "rpc": "https://mainnet.aurora.dev"
-        },
-        {
-            "type": "near",
-            "networkId": "near-testnet",
-            "credentialsStorePathEnvKey": "NEAR_CREDENTIALS_STORE_PATH",
-            "networkType": "testnet",
-            "rpc": "https://rpc.testnet.near.org",
-            "maxGas": "300000000000000",
-            "accountId": "{{YOUR_ACCOUNT_ID_HERE}}",
-            "storageDeposit": "300800000000000000000000"
+            "chainId": 1313161555,
+            "rpc": "https://testnet.aurora.dev"
         }
     ],
     "pairs": [
         {
             "description": "Anyone can transmit() an answer to me, I'm a FluxPriceFeed without access control!",
             "pair": "ETH / USD",
-            "contractAddress": "0x8BAac7F07c86895cd017C8a2c7d3C72cF9f1051F",
+            "contractAddress": "0x8D15563136A53610ff4D1FE78E391AbA37FC8f8C",
             "sources": [
                 {
                     "source_path": "market_data.current_price.usd",
@@ -30,21 +20,20 @@
                 }
             ],
             "interval": 5000,
-            "networkId": "aurora"
+            "networkId": "aurora-testnet"
         },
         {
-            "description": "ETH / USD for NEAR",
-            "pair": "ETH / USD",
-            "contractAddress": "fpo3.franklinwaller2.testnet",
+            "description": "Anyone can transmit() an answer to me, I'm a FluxPriceFeed without access control!",
+            "pair": "AURORA / USD",
+            "contractAddress": "0x8E64287Ed026fF2895bf9DDCf6186e28AD664A78",
             "sources": [
                 {
                     "source_path": "market_data.current_price.usd",
-                    "end_point": "https://api.coingecko.com/api/v3/coins/ethereum"
+                    "end_point": "https://api.coingecko.com/api/v3/coins/aurora-near"
                 }
             ],
             "interval": 5000,
-            "networkId": "near-testnet",
-            "defaultDecimals": 6
+            "networkId": "aurora-testnet"
         }
     ]
 }
